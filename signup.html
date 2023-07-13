@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Signup Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/Css/signup.css">
+</head>
+<body>
+    <div class="wrapper">
+      <div class="title-text">
+        <div class="title login">Login </div>
+        <div class="title signup">Signup </div>
+      </div>
+      <div class="form-container">
+        <div class="slide-controls">
+          <input type="radio" name="slide" id="login" checked>
+          <input type="radio" name="slide" id="signup">
+          <label for="login" class="slide login">Login</label>
+          <label for="signup" class="slide signup">Signup</label>
+          <div class="slider-tab"></div>
+        </div>
+        <div class="form-inner">
+          <form action="#" class="login">
+            <div class="field">
+              <input type="text" placeholder="Email Address" required>
+            </div>
+            <div class="field">
+              <input type="password" placeholder="Password" required>
+            </div>
+            <div class="pass-link"><a href="#">Forgot password?</a></div>
+            <div class="field btn">
+              <div class="btn-layer"></div>
+              <input type="submit" value="Login">
+            </div>
+            <div class="signup-link"><a href="">Signup now</a></div>
+          </form>
+          <form action="#" class="signup">
+            <div class="field">
+              <input type="name" placeholder="Name" required>
+            </div>
+            <div class="field">
+              <input type="email" placeholder="Email Address" required>
+            </div>
+            <div class="field">
+              <input type="username" placeholder="Username" required>
+            </div>
+            <div class="field">
+              <input type="password" placeholder="Password" required>
+            </div>
+            <div class="field btn">
+              <div class="btn-layer"></div>
+              <input type="submit" value="Signup">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const loginText = document.querySelector(".title-text .login");
+      const loginForm = document.querySelector("form.login");
+      const loginBtn = document.querySelector("label.login");
+      const signupBtn = document.querySelector("label.signup");
+      const signupLink = document.querySelector("form .signup-link a");
+      signupBtn.onclick = (()=>{
+        loginForm.style.marginLeft = "-50%";
+        loginText.style.marginLeft = "-50%";
+      });
+      loginBtn.onclick = (()=>{
+        loginForm.style.marginLeft = "0%";
+        loginText.style.marginLeft = "0%";
+      });
+      signupLink.onclick = (()=>{
+        signupBtn.click();
+        return false;
+      });
+    </script>
+
+    <script type="module">
+       // Import the functions you need from the SDKs
+       import { initializeApp } from "https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js";
+       import { getAnalytics } from "https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js";
+
+       const firebaseConfig = {
+       apiKey: "AIzaSyDNe1bo-teRwPMrYbZoGKz4xxtADrEkNCQ",
+       authDomain: "twitter-clone-2-f36ec.firebaseapp.com",
+       databaseURL: "https://twitter-clone-2-f36ec-default-rtdb.firebaseio.com",
+       projectId: "twitter-clone-2-f36ec",
+       storageBucket: "twitter-clone-2-f36ec.appspot.com",
+       messagingSenderId: "1021159065734",
+       appId: "1:1021159065734:web:7013a40d07a0295555e907",
+       measurementId: "G-E8NWT17NY6"
+       };
+
+       // Initialize Firebase
+       const app = initializeApp(firebaseConfig);
+       const analytics = getAnalytics(app);
+
+       import { getDatabase, ref, set, child }
+           from "https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js";
+
+       const db = getDatabase();
+  
+       const email = document.getElementById("emailInp");
+       const password = document.getElementById("passwordInp");
+       const name = document.getElementById("nameInp");
+       const username = document.getElementById("userInp");
+       const signup = document.getElementById("signupBtn");
+  
+
+       function validation() {
+          let nameregex = /^[a-zA-Z]+$/;
+          let email = /^[a-zA-Z0-9]+@(gmail|yahoo|outlook)\.com$/;
+          let userregex = /^[a-zA-Z0-9]{5,}$/;
+
+        if(!nameregex.test(name.value)){
+           alert("the name should contain alphabets!");
+           return false;
+        }
+  
+  
+        if(!email.test(email.value)){
+           alert("enter a valid email!");
+           return false;
+        }
+
+        if(!userregex.test(username.value)){
+           alert("-username must be alphanumeric\n -cannot contain spaces");
+           return false;
+        }
+        return true;
+       }
+
+       function Registeruser(){
+
+         if(validation()){
+           return;
+         };
+         const dbRef = ref(db);
+
+         get(child("userslist/"+ username.value)).then((snapshot)=>{
+           if(snapshot.exists()){
+             alert("Account already exist!");
+           }
+
+           else{
+             set(ref(db, "userlist/"+ username.value),
+             {
+               fullname: name.value,
+               email: email.value,
+               password: password.value,
+               username: username.value,
+               
+             });
+             then(()=>{
+               alert("user added successfully");
+             })
+             .catch((error)=>{
+               alert("error"+ error);
+             })
+           }
+         })
+       }
+
+       signup.addEventListener('click', Registeruser);
+
+    </script>
+</body>
+</html>
